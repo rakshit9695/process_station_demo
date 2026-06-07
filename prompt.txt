@@ -1,0 +1,35 @@
+So I am supposed to design a dashboard that acts as a beta for a AR VR product we are trying to build --
+All specifications about the product are attached in the photos I have provided -- it is a process station that takes a input and performs a mock dirlling operation
+All specifications on how it works step by step are in the images -- in order all of the images contains the following --
+Description
+Technical Specs
+Table of Components
+Step Displacement Diagram
+Electro-Pneumatic Diagram
+Sequential Function Chart
+IO List for all processes
+System Steps
+Now I want you to do the following based on this --
+Lets create an academic dashboard that is capable of the showcasing the following end to end – each page of the dashboard must showcase a sidebar where each of the page is navigable
+First comes the login screen where name and email is supposed to be taken and stored in the backend
+Introduction to the Process Station 
+We need to explain how this is one particular station around the Siemens MMS Kit around Mechatronics and Industry Automation
+Explain what it does on a high surface level 
+Use some animations to make this page a bit lucrative to the audience
+Please make sure there is a end to end photo and a flow chart showcasing a high level understanding of things before deep dives – you will find the photo here - C:\Users\Rakshit Mishra\Desktop\WILP\dashboard_process_station\sources\component_description
+Physics 
+Based on whatever the attached photos showcase end to end, I want you to make a page around the physics involved
+Make sure this is segregated into physics – mechanics (Mechanical Components, Actuators and Torque Calculations), electronics (Sensors), electrical (PLCs and Relays) and Pneumatics (Cylinders and Pistons + Compressors) - make sure all the first principles are covered in a chronological order such that anyone visiting the dashboard in a chronological order, must have good physics perspective moving forward
+Step Displacement Diagram + Electro-Pneumatic Diagram
+Both of these have been attached as photos, what I want you to do is make a algorithm that simulates both in front of the user with relevant description (based on physics and first principles) around all the steps and parts in both the diagrams – you do not have to make it as complex as in the photos, the idea is the understanding should be full end to end, the showcase of the diagrams can be simplistic with block diagrams (but very good explanations)
+Sequential Function Chart 
+This is the part where we explain the working of each of the parts end to end, this is where the descriptions can go in depth – bridging the understanding of the pneumatics, mechanics and the electronics – here you can use all the data you find in C:\Users\Rakshit Mishra\Desktop\WILP\dashboard_process_station\sources\component_description
+Note that the most of the photos in the above folder is very very detailed…we only need physics based and how it integrates into this picture and some first principle concepts if applicable
+On the dashboard you can include cards for the same, which when clicked can go into in-depth description of what each of the components does end to end – the card should just showcase the part and a very brief overview while when clicked can go into the depth of the physics and working principle
+PLC 
+I want you to extract an open source model of the PLC, that you can embed into this and use it end to end to showcase a 3D rendered model … put into C:\Users\Rakshit Mishra\Desktop\WILP\dashboard_process_station\sources\3D_model_PLC
+I also want you to make a 2D Siemens S1200 PLC front dashboard that changes based on the inputs based on the “IO List and System Steps” – the expectation is that the PLC frontend (one which shows the input output etc is visible – i will add a image for reference) and the ladder logic are build side by side in front of the student and he is able to experience how ladder logic translates into PLC commands and finally changes in the system (the system part need not be shown)
+AR Setup (we will execute the above first and then move to this)
+
+Across the 6 pages we will have 1-2 quiz questions around each page, that tests the knowledge of the user going through the dashboard and at the end, all results must be stored to the backend
+Design of the dashboard can be black and white – more focus towards design elements and simulations (that should be flawless)

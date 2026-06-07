@@ -1,0 +1,5 @@
+fastapi==0.115.2
+uvicorn[standard]==0.31.1
+pydantic[email]==2.9.2
+SQLAlchemy==2.0.35
+psycopg2-binary==2.9.9
