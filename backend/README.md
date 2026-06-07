@@ -26,10 +26,12 @@ python app.py            # serves on http://localhost:7860
 1. Create a new **Space** → SDK: **Docker**.
 2. Upload the contents of this `backend/` folder (`app.py`, `Dockerfile`,
    `requirements.txt`, `README.md`). The YAML header above configures the Space.
-3. (Optional, for durable storage) In **Settings → Persistent storage**, add a
-   free disk and it will mount at `/data`, where `dashboard.db` lives.
+3. **Durable database (recommended):** in **Settings → Variables and secrets**,
+   add a secret `DATABASE_URL` with your free Neon Postgres connection string
+   (`postgresql://…?sslmode=require`). With it set, the API uses Postgres; without
+   it, it falls back to an ephemeral SQLite file (data resets on rebuild).
 4. Your API base URL will be `https://<username>-<space-name>.hf.space`.
-   Put that into the frontend's `.env.local` as `NEXT_PUBLIC_API_BASE`.
+   Put that into Vercel as `NEXT_PUBLIC_API_BASE` (or `frontend/.env.local` for dev).
 
 ## Endpoints
 

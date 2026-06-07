@@ -40,15 +40,36 @@ npm run dev
 ```
 `frontend/.env.local` already points `NEXT_PUBLIC_API_BASE` at the local backend.
 
-## Deploy
+## Deploy (Neon Postgres → Hugging Face → Vercel)
 
-- **Backend → Hugging Face Spaces (Docker):** see `backend/README.md`. Upload the
-  `backend/` folder; the Space serves on port 7860. Copy the Space URL into
-  `frontend/.env.local` as `NEXT_PUBLIC_API_BASE`.
-- **Frontend → Vercel / Netlify / static host:** `npm run build`. Set the same
-  `NEXT_PUBLIC_API_BASE` env var to your Space URL.
+Do these in order — each step produces a value the next one needs.
 
-The frontend degrades gracefully: if the backend is offline, learning continues
+### 1 — Database: Neon (free Postgres)
+1. Sign up at https://neon.tech → **New Project**.
+2. Copy the **pooled** connection string (Dashboard → Connect). It looks like:
+   `postgresql://user:pass@ep-xxx-pooler.region.aws.neon.tech/neondb?sslmode=require`
+3. Keep it for step 2.
+
+### 2 — Backend: Hugging Face Space (Docker)
+1. https://huggingface.co/new-space → SDK **Docker**, name e.g. `process-station-api`.
+2. Upload the contents of the `backend/` folder (`app.py`, `Dockerfile`,
+   `requirements.txt`, `README.md`) — drag-and-drop in the Space's **Files** tab,
+   or `git push` to the Space repo.
+3. Space **Settings → Variables and secrets → New secret**:
+   `DATABASE_URL` = the Neon string from step 1.
+4. The Space builds and serves at
+   `https://<username>-process-station-api.hf.space`. Visit `/` to confirm
+   `"db": "postgres"`.
+
+### 3 — Frontend: Vercel
+1. https://vercel.com → **Add New → Project** → import the GitHub repo.
+2. **Root Directory: `frontend`** (important — the Next.js app lives there).
+3. **Environment Variables:** `NEXT_PUBLIC_API_BASE` = your HF Space URL
+   (from step 2). It's a build-time var, so set it *before* deploying.
+4. Deploy. (If you change the env var later, redeploy to rebuild.)
+
+CORS is open on the backend, so the Vercel domain works out of the box. The
+frontend also degrades gracefully: if the backend is offline, learning continues
 and results are kept locally on the device.
 
 ## Project layout
