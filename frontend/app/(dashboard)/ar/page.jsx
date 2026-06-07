@@ -3,9 +3,9 @@
 import { motion } from "framer-motion";
 import { PageShell, PageHeader, Section, Reveal } from "@/components/ui";
 
-const DRIVE_ID = "1n_hDEwPBsZ3zAeFBg73QqZ2om5KcABpv";
+const DRIVE_ID = "1h5MygTkKvKHdUjUPmUyVcDbfdiwI_Pvw";
 const DOWNLOAD_URL = `https://drive.google.com/uc?export=download&id=${DRIVE_ID}`;
-const VIEW_URL = `https://drive.google.com/file/d/${DRIVE_ID}/view`;
+const VIEW_URL = `https://drive.google.com/file/d/${DRIVE_ID}/view?usp=drive_link`;
 
 export default function ARPage() {
   return (
@@ -103,44 +103,60 @@ export default function ARPage() {
             </div>
           </div>
 
-          {/* animated AR motif */}
+          {/* SCAN-TO-DOWNLOAD QR — built for phones */}
           <div className="card-dark relative overflow-hidden lg:col-span-2">
             <div className="absolute inset-0 grid-bg opacity-20" />
-            <div className="relative z-10 grid h-full place-items-center p-8">
-              <ARMotif />
+            <div className="relative z-10 flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
+              <p className="font-mono text-[10px] tracking-[0.3em] text-paper/50">
+                SCAN TO DOWNLOAD
+              </p>
+
+              <a
+                href={VIEW_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative"
+                aria-label="Scan or tap to open the AR build on Google Drive"
+              >
+                {/* scanning corner brackets */}
+                <span className="pointer-events-none absolute -inset-3">
+                  {["left-0 top-0 border-l-2 border-t-2", "right-0 top-0 border-r-2 border-t-2", "left-0 bottom-0 border-l-2 border-b-2", "right-0 bottom-0 border-r-2 border-b-2"].map((c, i) => (
+                    <span key={i} className={`absolute h-5 w-5 border-paper/60 ${c}`} />
+                  ))}
+                </span>
+
+                {/* the QR itself, on a white tile so cameras read it cleanly */}
+                <span className="block rounded-xl bg-paper p-4 shadow-lg transition-transform group-hover:scale-[1.02]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/img/ar-qr.svg"
+                    alt="QR code — scan to open the AR build on Google Drive"
+                    width={180}
+                    height={180}
+                    className="h-44 w-44"
+                  />
+                </span>
+
+                {/* animated scan line sweeping over the code */}
+                <motion.span
+                  className="pointer-events-none absolute inset-x-4 top-4 h-0.5 rounded bg-paper/80 mix-blend-difference"
+                  initial={{ y: 0, opacity: 0 }}
+                  animate={{ y: [0, 168, 0], opacity: [0, 1, 1, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                />
+              </a>
+
+              <p className="max-w-[15rem] text-xs leading-relaxed text-paper/60">
+                Point your phone camera at the code to open the AR build on Google
+                Drive, then tap download.
+              </p>
+              <p className="font-mono text-[10px] tracking-[0.3em] text-paper/40">
+                AR · PREVIEW
+              </p>
             </div>
           </div>
         </div>
       </Section>
     </PageShell>
-  );
-}
-
-function ARMotif() {
-  return (
-    <div className="relative h-48 w-48">
-      {/* scanning rings */}
-      {[0, 1, 2].map((i) => (
-        <motion.div
-          key={i}
-          className="absolute inset-0 rounded-full border border-paper/30"
-          initial={{ scale: 0.4, opacity: 0.7 }}
-          animate={{ scale: 1.6, opacity: 0 }}
-          transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.8 }}
-        />
-      ))}
-      {/* floating cube */}
-      <motion.div
-        className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 border-2 border-paper"
-        animate={{ rotate: 360, y: [-6, 6, -6] }}
-        transition={{
-          rotate: { duration: 8, repeat: Infinity, ease: "linear" },
-          y: { duration: 2.4, repeat: Infinity, ease: "easeInOut" },
-        }}
-      />
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 font-mono text-[10px] tracking-[0.3em] text-paper/50">
-        AR · PREVIEW
-      </div>
-    </div>
   );
 }
