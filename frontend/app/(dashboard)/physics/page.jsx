@@ -1,18 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { PageShell, PageHeader, Reveal } from "@/components/ui";
 import Quiz from "@/components/Quiz";
+import { Formula, Tag, FormulaCard } from "@/components/Formula";
+import { QUIZZES } from "@/lib/quizzes";
 
-// Formula chip — keeps everything monochrome, no external math lib needed.
-function F({ children }) {
-  return (
-    <span className="mx-0.5 rounded bg-ink px-2 py-0.5 font-mono text-[13px] text-paper">
-      {children}
-    </span>
-  );
-}
+// Pull just the questions for one sub-domain (they all live under page "physics").
+const physicsQ = (domain) =>
+  QUIZZES.physics.filter((q) => q.domain === domain);
 
 function Worked({ title, lines }) {
   return (
@@ -69,34 +65,56 @@ export default function PhysicsPage() {
         </div>
       </div>
 
+      {/* how-to: formulas are interactive */}
+      <Reveal>
+        <div className="mb-10 flex items-start gap-3 rounded-xl border border-ink/15 bg-paper-soft/50 p-4">
+          <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-ink font-mono text-[11px] text-paper">
+            i
+          </span>
+          <p className="text-sm leading-relaxed text-ink/75">
+            <strong>Every black formula on this page is clickable.</strong> Tap
+            one to open a plain-English description, a worked numerical example,
+            and exactly how it shows up on this station. The first formula below,{" "}
+            <Tag>p·V = n·R·T</Tag>, is shown <em>already opened</em> as an
+            example — all the others reveal the same when you click them.
+          </p>
+        </div>
+      </Reveal>
+
       {/* 01 — PNEUMATICS */}
       <Domain id="pneumatics" n="01" title="Pneumatics — storing & delivering energy">
         <p>
           Everything starts with a <strong>compressor</strong> squeezing
           atmospheric air into a receiver. Compressing a gas does work on it
-          (<F>W = ∫ p dV</F>); that work is banked as pressure energy. The station
-          runs on <strong>6–8 bar</strong> of filtered air conditioned by the{" "}
-          <strong>FRL unit (0Z)</strong> — <em>Filter</em> (removes dirt/water),{" "}
-          <em>Regulator</em> (holds a steady set pressure) and{" "}
-          <em>Lubricator</em> (mists oil to protect seals).
+          (<Formula id="comp-work">W = ∫ p dV</Formula>); that work is banked as
+          pressure energy. The station runs on <strong>6–8 bar</strong> of
+          filtered air conditioned by the <strong>FRL unit (0Z)</strong> —{" "}
+          <em>Filter</em> (removes dirt/water), <em>Regulator</em> (holds a
+          steady set pressure) and <em>Lubricator</em> (mists oil to protect
+          seals).
         </p>
 
         <h4 className="mt-6 font-semibold">Why air? The ideal-gas intuition</h4>
         <p className="mt-2">
-          For the air in a line, <F>p·V = n·R·T</F>. Because gas is{" "}
+          For the air in a line, pressure, volume, amount and temperature are
+          linked by the ideal-gas law. Because gas is{" "}
           <strong>compressible</strong>, it acts like a spring: it can store
           energy, cushion shocks, and a cylinder can stall against a load without
           damage. That compliance is also why we never get servo-like position
           accuracy from raw pneumatics — we use mechanical end-stops and sensors
           instead.
         </p>
+        {/* PV = nRT shown OPEN as the worked demo of the click-to-expand idea */}
+        <FormulaCard id="ideal-gas" badge="Shown open as an example — every other formula opens like this on click" />
 
         <h4 className="mt-6 font-semibold">Cylinder force — the master equation</h4>
         <p className="mt-2">
           A piston converts pressure into a straight push:{" "}
-          <F>F = p · A</F>, where <F>A = π·d² / 4</F> is the piston area. On the
-          retract stroke the piston rod steals some area, so the pulling force is
-          a little lower (<F>A_ret = π(d² − d_rod²)/4</F>).
+          <Formula id="cyl-force">F = p · A</Formula>, where{" "}
+          <Formula id="piston-area">A = π·d² / 4</Formula> is the piston area. On
+          the retract stroke the piston rod steals some area, so the pulling
+          force is a little lower (
+          <Formula id="retract-area">A_ret = π(d² − d_rod²)/4</Formula>).
         </p>
         <Worked
           title="Worked example — drill-feed cylinder 2A"
@@ -128,6 +146,14 @@ export default function PhysicsPage() {
             <strong>4 bar</strong>, so actuators never move with too little force.
           </li>
         </ul>
+
+        <Quiz
+          page="physics"
+          compact
+          kicker="Checkpoint · Pneumatics"
+          heading="Quick check — Pneumatics"
+          questions={physicsQ("pneumatics")}
+        />
       </Domain>
 
       {/* 02 — MECHANICS */}
@@ -147,7 +173,9 @@ export default function PhysicsPage() {
           the air. To spin the table you must overcome its rotational inertia:
         </p>
         <p className="mt-2">
-          <F>τ = I · α</F> &nbsp;and&nbsp; <F>θ = ½ α t²</F> for the 60° (=1.047 rad) move.
+          <Formula id="torque">τ = I · α</Formula> &nbsp;and&nbsp;{" "}
+          <Formula id="ang-kin">θ = ½ α t²</Formula> for the 60° (=1.047 rad)
+          move.
         </p>
         <Worked
           title="Worked example — indexing torque"
@@ -161,11 +189,12 @@ export default function PhysicsPage() {
 
         <h4 className="mt-6 font-semibold">Drilling — torque, speed & cutting power</h4>
         <p className="mt-2">
-          The air-motor drill delivers torque <F>τ</F> at angular speed{" "}
-          <F>ω</F>; the mechanical power into the cut is <F>P = τ · ω</F>. Feed
-          thrust (from cylinder 2A) presses the bit in while rotation removes
-          material. Too much feed stalls the air motor — which is actually a safe,
-          self-limiting failure mode.
+          The air-motor drill delivers torque <Tag>τ</Tag> at angular speed{" "}
+          <Tag>ω</Tag>; the mechanical power into the cut is{" "}
+          <Formula id="rot-power">P = τ · ω</Formula>. Feed thrust (from cylinder
+          2A) presses the bit in while rotation removes material. Too much feed
+          stalls the air motor — which is actually a safe, self-limiting failure
+          mode.
         </p>
 
         <h4 className="mt-6 font-semibold">Pick &amp; place — resisting moments</h4>
@@ -175,9 +204,18 @@ export default function PhysicsPage() {
           resisted by two reactions, keeping the suction cup square so it seals.
           The horizontal axis is a <strong>rodless cylinder (5A)</strong>: the
           piston is coupled to an external carriage, giving a long stroke in a
-          short body. Lifting needs <F>F_lift &gt; m·g</F> with margin for the
-          seal and acceleration (<F>F = m(g + a)</F>).
+          short body. Lifting needs{" "}
+          <Formula id="lift-min">F_lift &gt; m·g</Formula> with margin for the
+          seal and acceleration (<Formula id="lift-dyn">F = m(g + a)</Formula>).
         </p>
+
+        <Quiz
+          page="physics"
+          compact
+          kicker="Checkpoint · Mechanics"
+          heading="Quick check — Mechanics"
+          questions={physicsQ("mechanics")}
+        />
       </Domain>
 
       {/* 03 — ELECTRONICS */}
@@ -213,8 +251,16 @@ export default function PhysicsPage() {
           actually gripped before the part is lifted. <strong>BP</strong> is{" "}
           <strong>analogue</strong>: it maps pressure to a continuous signal
           (e.g. 4–20 mA or 0–10 V) that the PLC&apos;s ADC turns into a number at{" "}
-          <F>AI0.0</F>. <em>Digital answers yes/no; analogue answers how much.</em>
+          <Tag>AI0.0</Tag>. <em>Digital answers yes/no; analogue answers how much.</em>
         </p>
+
+        <Quiz
+          page="physics"
+          compact
+          kicker="Checkpoint · Electronics"
+          heading="Quick check — Electronics"
+          questions={physicsQ("electronics")}
+        />
       </Domain>
 
       {/* 04 — ELECTRICAL */}
@@ -255,9 +301,10 @@ export default function PhysicsPage() {
           <strong>solenoid coil</strong> (on the 5/2 valves) or a{" "}
           <strong>relay</strong> — where a tiny coil current closes contacts
           carrying far more power. This is electromagnetic{" "}
-          <strong>amplification</strong>: <F>F ∝ N·I</F> (ampere-turns) builds the
+          <strong>amplification</strong>:{" "}
+          <Formula id="amp-turns">F ∝ N·I</Formula> (ampere-turns) builds the
           field that throws the armature. It is exactly how{" "}
-          <F>Q0.0 → 1Y1</F> turns one logic bit into a real cylinder stroke.
+          <Tag>Q0.0 → 1Y1</Tag> turns one logic bit into a real cylinder stroke.
         </p>
         <Worked
           title="Bit → motion, end to end"
@@ -269,9 +316,15 @@ export default function PhysicsPage() {
             "→ reed sensor 1B2 = 1 → input I0.5 → PLC advances",
           ]}
         />
-      </Domain>
 
-      <Quiz page="physics" />
+        <Quiz
+          page="physics"
+          compact
+          kicker="Checkpoint · Electrical"
+          heading="Quick check — Electrical & Control"
+          questions={physicsQ("electrical")}
+        />
+      </Domain>
     </PageShell>
   );
 }

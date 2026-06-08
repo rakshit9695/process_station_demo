@@ -24,9 +24,14 @@ export const QUIZZES = {
       answer: 2,
     },
   ],
+  // Each physics question carries a `domain` so the page can show a short
+  // checkpoint under each sub-domain. They all still live under page "physics",
+  // so scoring, quizCount() and the Results breakdown stay correct.
   physics: [
+    // — Pneumatics —
     {
-      id: "phys-1",
+      id: "phys-pn-1",
+      domain: "pneumatics",
       q: "A pneumatic cylinder's output force is given by:",
       options: [
         "F = m·a only",
@@ -37,7 +42,46 @@ export const QUIZZES = {
       answer: 1,
     },
     {
-      id: "phys-2",
+      id: "phys-pn-2",
+      domain: "pneumatics",
+      q: "Why is a 5/2 double-solenoid valve called bistable?",
+      options: [
+        "It needs continuous coil power to hold the cylinder still",
+        "It remembers its last commanded position after the coil is de-energised",
+        "It can only ever extend the cylinder",
+        "It vents both cylinder ports at the same time",
+      ],
+      answer: 1,
+    },
+    // — Mechanics —
+    {
+      id: "phys-me-1",
+      domain: "mechanics",
+      q: "The rotary indexing table is 'self-locating'. Where does its positional accuracy come from?",
+      options: [
+        "From precisely timing the air pulse",
+        "From a mechanical detent/stop machined in steel, not from the air",
+        "From a servo encoder counting degrees",
+        "From the operator nudging it by hand",
+      ],
+      answer: 1,
+    },
+    {
+      id: "phys-me-2",
+      domain: "mechanics",
+      q: "To spin up the indexing table you must supply a torque τ. It relates to inertia and angular acceleration by:",
+      options: [
+        "τ = m·g",
+        "τ = I·α (moment of inertia × angular acceleration)",
+        "τ = p·A",
+        "τ = V·I",
+      ],
+      answer: 1,
+    },
+    // — Electronics —
+    {
+      id: "phys-el-1",
+      domain: "electronics",
       q: "The magnetic reed sensors (1B1, 2B2, …) on the cylinders detect:",
       options: [
         "Air pressure inside the line",
@@ -46,6 +90,43 @@ export const QUIZZES = {
         "The rotational speed of the drill",
       ],
       answer: 1,
+    },
+    {
+      id: "phys-el-2",
+      domain: "electronics",
+      q: "What is the key difference between the digital vacuum switch 6P1 and the analogue pressure sensor BP?",
+      options: [
+        "There is none — both output a yes/no signal",
+        "6P1 answers yes/no (gripped?), BP reports how much pressure as a continuous value",
+        "BP is digital and 6P1 is analogue",
+        "Both report a continuous 4–20 mA current",
+      ],
+      answer: 1,
+    },
+    // — Electrical —
+    {
+      id: "phys-ec-1",
+      domain: "electrical",
+      q: "The S7-1200 PLC runs a fixed scan cycle. What is its correct order?",
+      options: [
+        "Write outputs → read inputs → solve logic",
+        "Read inputs → solve ladder logic → write outputs → repeat",
+        "Solve logic → write outputs → never read inputs again",
+        "It reacts instantly with no repeating cycle",
+      ],
+      answer: 1,
+    },
+    {
+      id: "phys-ec-2",
+      domain: "electrical",
+      q: "A PLC output sources only a small current, yet it drives a solenoid/relay. What principle bridges the gap?",
+      options: [
+        "Electromagnetic amplification — a small coil current switches a much larger load",
+        "Nuclear decay",
+        "Bernoulli's principle",
+        "Simple resistive heating",
+      ],
+      answer: 0,
     },
   ],
   simulation: [

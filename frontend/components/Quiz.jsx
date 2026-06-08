@@ -6,8 +6,14 @@ import { useStore } from "@/lib/store";
 import { QUIZZES } from "@/lib/quizzes";
 import { api } from "@/lib/api";
 
-export default function Quiz({ page }) {
-  const questions = QUIZZES[page] || [];
+export default function Quiz({
+  page,
+  questions: questionsProp,
+  heading = "Test your understanding",
+  kicker = "Checkpoint",
+  compact = false,
+}) {
+  const questions = questionsProp || QUIZZES[page] || [];
   const answers = useStore((s) => s.answers);
   const answerQuestion = useStore((s) => s.answerQuestion);
   const user = useStore((s) => s.user);
@@ -47,11 +53,17 @@ export default function Quiz({ page }) {
   if (!questions.length) return null;
 
   return (
-    <section className="mt-14 rounded-xl border border-ink/15 bg-white p-6">
+    <section
+      className={`rounded-xl border border-ink/15 bg-white p-6 ${
+        compact ? "mt-8" : "mt-14"
+      }`}
+    >
       <div className="mb-5 flex items-center justify-between">
         <div>
-          <p className="eyebrow">Checkpoint</p>
-          <h2 className="text-xl font-semibold">Test your understanding</h2>
+          <p className="eyebrow">{kicker}</p>
+          <h2 className={compact ? "text-lg font-semibold" : "text-xl font-semibold"}>
+            {heading}
+          </h2>
         </div>
         <span className="chip">
           {answeredHere}/{questions.length} answered
@@ -118,16 +130,24 @@ export default function Quiz({ page }) {
         })}
       </div>
 
-      <div className="mt-5 flex items-center justify-end gap-3">
-        {saved && <span className="text-xs text-ink/50">Saved ✓</span>}
-        <button
-          onClick={persist}
-          disabled={!allDone}
-          className="btn-primary text-sm"
-        >
-          Save answers
-        </button>
-      </div>
+      {compact ? (
+        <p className="mt-4 text-right text-xs text-ink/40">
+          {allDone
+            ? "Recorded ✓ — submitted with the rest on the Results page."
+            : "Answers are saved automatically as you go."}
+        </p>
+      ) : (
+        <div className="mt-5 flex items-center justify-end gap-3">
+          {saved && <span className="text-xs text-ink/50">Saved ✓</span>}
+          <button
+            onClick={persist}
+            disabled={!allDone}
+            className="btn-primary text-sm"
+          >
+            Save answers
+          </button>
+        </div>
+      )}
     </section>
   );
 }
